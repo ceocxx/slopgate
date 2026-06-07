@@ -1,0 +1,32 @@
+name: 'Slopgate'
+description: 'Catch AI slop — stubs, placeholders, fake data, swallowed errors — and fail the build when it appears.'
+author: 'CUI Labs Pte. Ltd.'
+branding:
+  icon: 'shield'
+  color: 'red'
+
+inputs:
+  path:
+    description: 'Path(s) to scan'
+    required: false
+    default: '.'
+  fail-on:
+    description: 'Minimum severity that fails the run (low | medium | high)'
+    required: false
+    default: 'medium'
+  diff:
+    description: 'Only flag slop on lines changed since this git ref (e.g. origin/main). Leave empty to scan everything.'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run slopgate
+      shell: bash
+      run: |
+        ARGS="scan ${{ inputs.path }} --fail-on ${{ inputs.fail-on }}"
+        if [ -n "${{ inputs.diff }}" ]; then
+          ARGS="$ARGS --diff ${{ inputs.diff }}"
+        fi
+        node "${{ github.action_path }}/bin/slopgate.mjs" $ARGS
