@@ -1,5 +1,7 @@
 # slopgate
 
+[![ci](https://github.com/ceocxx/slopgate/actions/workflows/ci.yml/badge.svg)](https://github.com/ceocxx/slopgate/actions/workflows/ci.yml)
+
 **Catch AI slop before it ships.** A zero-dependency CLI that scans your codebase for the junk AI coding agents leave behind — stubs, placeholder comments, fake data, swallowed errors — and fails CI when it finds them.
 
 > **Status (v0.2.0):** the open-source CLI works today (see [Verified](#verified)). The hosted **Slopgate Cloud** tier is **not built yet** — the `cloud` command says so and exits non-zero rather than pretend it works.
@@ -102,4 +104,4 @@ node bin/slopgate.mjs scan .                           # the repo dogfoods its o
 
 ## License
 
-Apache-2.0 © CUI Labs Pte. Ltd. See [LICENSE](LICENSE).
+Apache-2.0 © Christopher Frost. See [LICENSE](LICENSE).

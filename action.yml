@@ -1,6 +1,6 @@
 name: 'Slopgate'
 description: 'Catch AI slop — stubs, placeholders, fake data, swallowed errors — and fail the build when it appears.'
-author: 'CUI Labs Pte. Ltd.'
+author: 'Christopher Frost'
 branding:
   icon: 'shield'
   color: 'red'

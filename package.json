@@ -35,7 +35,7 @@
     "code-review"
   ],
   "license": "Apache-2.0",
-  "author": "CUI Labs Pte. Ltd.",
+  "author": "Christopher Frost <ceocxx@outlook.com> (https://github.com/ceocxx)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ceocxx/slopgate.git"
