@@ -1,0 +1,47 @@
+{
+  "name": "slopgate",
+  "version": "0.1.0",
+  "description": "Catch AI slop before it ships — a zero-dependency CLI that flags stubs, placeholders, fake data, and swallowed errors in your codebase, and fails CI when it finds them.",
+  "type": "module",
+  "bin": {
+    "slopgate": "bin/slopgate.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "scan": "node bin/slopgate.mjs scan .",
+    "demo": "node bin/slopgate.mjs scan examples/slop-sample.js"
+  },
+  "keywords": [
+    "ai",
+    "slop",
+    "ai-slop",
+    "lint",
+    "linter",
+    "code-quality",
+    "ci",
+    "static-analysis",
+    "placeholder",
+    "stub",
+    "honesty",
+    "code-review"
+  ],
+  "license": "Apache-2.0",
+  "author": "CUI Labs Pte. Ltd.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slopgate/slopgate.git"
+  },
+  "homepage": "https://github.com/slopgate/slopgate",
+  "bugs": {
+    "url": "https://github.com/slopgate/slopgate/issues"
+  }
+}

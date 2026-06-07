@@ -1,0 +1,4 @@
+{
+  "failOn": "medium",
+  "exclude": ["src/rules.mjs", "examples", "test"]
+}
