@@ -18,7 +18,8 @@
   "scripts": {
     "test": "node --test",
     "scan": "node bin/slopgate.mjs scan .",
-    "demo": "node bin/slopgate.mjs scan examples/slop-sample.js"
+    "demo": "node bin/slopgate.mjs scan examples/slop-sample.js",
+    "usage": "node scripts/usage.mjs"
   },
   "keywords": [
     "ai",

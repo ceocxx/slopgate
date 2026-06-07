@@ -1,0 +1,42 @@
+name: release
+
+# Publishes to npm when you push a version tag (e.g. `git tag v0.2.0 && git push origin v0.2.0`).
+# Add an NPM_TOKEN repository secret to enable the publish step. Without it, the
+# workflow runs tests + self-scan and skips publishing (with a note) instead of failing.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write # required for npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Unit tests
+        run: node --test
+
+      - name: Self-scan (dogfood the gate)
+        run: node bin/slopgate.mjs scan .
+
+      - name: Publish to npm (with provenance)
+        if: ${{ env.NPM_TOKEN != '' }}
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
+
+      - name: Note — npm publish skipped
+        if: ${{ env.NPM_TOKEN == '' }}
+        run: echo "NPM_TOKEN secret not set; skipping npm publish. Add it in Settings -> Secrets -> Actions to enable automated releases."

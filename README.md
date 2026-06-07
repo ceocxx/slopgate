@@ -26,7 +26,13 @@ Test files (`*.test.*`, `*.spec.*`, `test/`) are automatically exempt from the f
 
 ## Install
 
-Not yet published to npm (the `slopgate` name is reserved). Run it from source today:
+**Run it today, straight from GitHub — no npm publish required:**
+
+```sh
+npx github:ceocxx/slopgate scan .
+```
+
+Or clone and run from source:
 
 ```sh
 git clone https://github.com/ceocxx/slopgate
@@ -34,7 +40,7 @@ cd slopgate
 node bin/slopgate.mjs scan path/to/your/code
 ```
 
-Once published:
+Once published to npm:
 
 ```sh
 npx slopgate scan .
@@ -100,6 +106,14 @@ npm test                                              # unit tests (node --test)
 node bin/slopgate.mjs scan examples/slop-sample.js    # watch it flag real slop (exit 1)
 node bin/slopgate.mjs scan examples/clean-sample.js   # clean code passes (exit 0)
 node bin/slopgate.mjs scan .                           # the repo dogfoods its own gate
+```
+
+## Watching adoption
+
+Real numbers from public sources — no telemetry is embedded in the CLI:
+
+```sh
+npm run usage    # npm download counts + GitHub stars / forks
 ```
 
 ## License
