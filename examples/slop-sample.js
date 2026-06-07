@@ -32,3 +32,8 @@ const config = {
   apiKey: 'YOUR_API_KEY',
   callbackUrl: 'https://example.com/webhook',
 };
+
+// more intentional slop for the expanded rule set:
+debugger;
+// @ts-ignore
+const parsed = JSON.parse(rawInput);

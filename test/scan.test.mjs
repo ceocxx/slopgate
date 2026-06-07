@@ -82,3 +82,24 @@ test('restrictToLines keeps only findings on changed lines (diff mode)', () => {
   assert.ok(result.findings.every((f) => f.line === 22), 'should drop findings on unchanged lines');
   assert.ok(result.findings.some((f) => f.rule === 'not-implemented'));
 });
+
+test('flags unresolved merge conflict markers', () => {
+  const text = 'const a = 1;\n<<<<<<< HEAD\nconst b = 2;\n=======\nconst b = 3;\n>>>>>>> feature\n';
+  const ids = scanText('merge.js', text).map((f) => f.rule);
+  assert.ok(ids.includes('merge-conflict'), `expected merge-conflict, got ${ids.join(',')}`);
+});
+
+test('flags leftover debugger statements', () => {
+  const ids = scanText('app.js', 'function f() { debugger; return 1; }').map((f) => f.rule);
+  assert.ok(ids.includes('debugger-statement'));
+});
+
+test('flags type-checker suppression', () => {
+  const ids = scanText('app.ts', '// @ts-ignore\nconst x = y.z;').map((f) => f.rule);
+  assert.ok(ids.includes('type-suppression'));
+});
+
+test('flags Go panic stubs via not-implemented', () => {
+  const ids = scanText('main.go', 'func f() { panic("TODO: implement me") }').map((f) => f.rule);
+  assert.ok(ids.includes('not-implemented'));
+});

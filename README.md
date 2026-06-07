@@ -4,7 +4,7 @@
 
 **Catch AI slop before it ships.** A zero-dependency CLI that scans your codebase for the junk AI coding agents leave behind — stubs, placeholder comments, fake data, swallowed errors — and fails CI when it finds them.
 
-> **Status (v0.2.0):** the open-source CLI works today (see [Verified](#verified)). The hosted **Slopgate Cloud** tier is **not built yet** — the `cloud` command says so and exits non-zero rather than pretend it works.
+> **Status (v0.3.0):** the open-source CLI works today (see [Verified](#verified)). The hosted **Slopgate Cloud** tier is **not built yet** — the `cloud` command says so and exits non-zero rather than pretend it works.
 
 ## Why
 
@@ -14,13 +14,16 @@ AI agents generate *plausible* code fast. Plausible is not the same as real: a f
 
 | Rule | Severity | Flags |
 |------|----------|-------|
-| `not-implemented` | high | `not implemented`, `NotImplementedError`, `unimplemented!()` |
+| `not-implemented` | high | `not implemented`, `NotImplementedError`, `unimplemented!()`, `panic("TODO")` |
+| `merge-conflict` | high | unresolved `<<<<<<<` / `>>>>>>>` conflict markers |
+| `debugger-statement` | high | leftover `debugger;` |
 | `placeholder-comment` | medium | `TODO`, `FIXME`, `HACK`, `XXX`, `STUB`, `PLACEHOLDER` |
 | `fake-randomness` | medium | `Math.random(` — suppressed in test files |
 | `simulated-data` | medium | `mockData`, `fakeData`, `simulate`, `hardcoded`, … — suppressed in tests |
 | `empty-catch` | medium | `catch {}` / `catch (e) {}` that swallow errors |
 | `fill-in-text` | medium | `your code here`, `implement this`, `coming soon`, … |
 | `placeholder-value` | low | `YOUR_API_KEY`, `changeme`, `example.com`, `lorem ipsum` |
+| `type-suppression` | low | `@ts-ignore`, `@ts-nocheck`, `# type: ignore` |
 
 Test files (`*.test.*`, `*.spec.*`, `test/`) are automatically exempt from the fake-data rules, where mocks are legitimate.
 

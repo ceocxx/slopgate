@@ -1,6 +1,6 @@
 {
   "name": "slopgate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Catch AI slop before it ships — a zero-dependency CLI that flags stubs, placeholders, fake data, and swallowed errors in your codebase, and fails CI when it finds them.",
   "type": "module",
   "bin": {

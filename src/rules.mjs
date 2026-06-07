@@ -16,7 +16,7 @@ export const rules = [
   {
     id: 'not-implemented',
     severity: 'high',
-    pattern: /not[ _-]?implemented|NotImplementedError|unimplemented!\(\)/gi,
+    pattern: /not[ _-]?implemented|NotImplementedError|unimplemented!\(\)|panic\((["'])[^"']*(TODO|implement)/gi,
     message: 'Stub — this code path is explicitly not implemented.',
   },
   {
@@ -50,5 +50,23 @@ export const rules = [
     severity: 'medium',
     pattern: /\b(your code here|implement (this|me)|coming soon|fill (this )?in|placeholder text)\b/gi,
     message: 'Fill-in placeholder text left in code.',
+  },
+  {
+    id: 'merge-conflict',
+    severity: 'high',
+    pattern: /^(<{7}|>{7})[ \t]/gm,
+    message: 'Unresolved merge conflict marker.',
+  },
+  {
+    id: 'debugger-statement',
+    severity: 'high',
+    pattern: /\bdebugger\s*;/g,
+    message: 'Leftover debugger statement.',
+  },
+  {
+    id: 'type-suppression',
+    severity: 'low',
+    pattern: /@ts-(ignore|nocheck|expect-error)\b|#\s*type:\s*ignore\b/g,
+    message: 'Type checker suppressed — the error may be papered over.',
   },
 ];
