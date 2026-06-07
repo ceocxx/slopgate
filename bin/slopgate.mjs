@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { scanPaths } from '../src/scanner.mjs';
 import { formatText, formatJson } from '../src/report.mjs';
 import { cloudCommand } from '../src/cloud.mjs';
+import { addedLines } from '../src/gitdiff.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(here, '..', 'package.json'), 'utf8'));
@@ -20,6 +21,7 @@ USAGE
   slopgate --help
 
 SCAN OPTIONS
+  --diff <ref>                  Only report slop on lines changed since <git ref>
   --json                        Machine-readable JSON output
   --fail-on <low|medium|high>   Minimum severity that fails the run (default: medium)
   --quiet                       Hide the matched source line for each finding
@@ -35,7 +37,7 @@ CONFIG
 `;
 
 function parseArgs(argv) {
-  const opts = { _: [], json: false, quiet: false, failOn: undefined, help: false, version: false };
+  const opts = { _: [], json: false, quiet: false, failOn: undefined, diff: undefined, help: false, version: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--json') opts.json = true;
@@ -44,6 +46,8 @@ function parseArgs(argv) {
     else if (a === '--version' || a === '-v') opts.version = true;
     else if (a === '--fail-on') opts.failOn = argv[++i];
     else if (a.startsWith('--fail-on=')) opts.failOn = a.slice('--fail-on='.length);
+    else if (a === '--diff') opts.diff = argv[++i];
+    else if (a.startsWith('--diff=')) opts.diff = a.slice('--diff='.length);
     else opts._.push(a);
   }
   return opts;
@@ -111,14 +115,27 @@ function run(argv) {
     return 2;
   }
 
+  let restrictToLines = null;
+  if (opts.diff) {
+    try {
+      restrictToLines = addedLines(opts.diff, cwd);
+    } catch (err) {
+      process.stderr.write(`slopgate: ${err.message}\n`);
+      return 2;
+    }
+  }
+
   const result = scanPaths(targets, {
     version: pkg.version,
     failOn,
     exclude: config.exclude || [],
     disabledRules: disabledFromConfig(config.rules),
+    restrictToLines,
   });
 
-  process.stdout.write(opts.json ? formatJson(result) : formatText(result, { quiet: opts.quiet, targets }));
+  process.stdout.write(
+    opts.json ? formatJson(result) : formatText(result, { quiet: opts.quiet, targets, diffRef: opts.diff }),
+  );
   return result.pass ? 0 : 1;
 }
 

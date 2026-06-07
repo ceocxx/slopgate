@@ -4,9 +4,10 @@ const SEV_LABEL = { high: 'high  ', medium: 'medium', low: 'low   ' };
 const CHECK = '✓';
 const CROSS = '✗';
 
-export function formatText(result, { quiet = false, targets = ['.'] } = {}) {
+export function formatText(result, { quiet = false, targets = ['.'], diffRef = null } = {}) {
   const out = [];
-  out.push(`slopgate v${result.version} — scanned ${targets.join(', ')}`);
+  const scope = diffRef ? ` (lines changed since ${diffRef})` : '';
+  out.push(`slopgate v${result.version} — scanned ${targets.join(', ')}${scope}`);
   out.push('');
 
   if (result.findings.length === 0) {

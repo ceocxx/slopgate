@@ -130,8 +130,12 @@ function collectFiles(target, excludes) {
 }
 
 // Scan one or more file/dir targets. Returns a structured result object.
+// options.restrictToLines: optional Map<path, Set<lineNumber>>. When set, only
+// files present in the map are scanned, and only findings on those lines are
+// kept — this powers `--diff` mode (gate just the lines that changed).
 export function scanPaths(targets, options = {}) {
   const excludes = options.exclude || [];
+  const restrict = options.restrictToLines || null;
   const seen = new Set();
   for (const target of targets) {
     for (const file of collectFiles(target, excludes)) seen.add(file);
@@ -140,6 +144,8 @@ export function scanPaths(targets, options = {}) {
   const findings = [];
   let filesScanned = 0;
   for (const file of seen) {
+    const display = normalize(relative(process.cwd(), file)) || file;
+    if (restrict && !restrict.has(display)) continue; // file unchanged in diff mode
     let text;
     try {
       text = readFileSync(file, 'utf8');
@@ -148,8 +154,12 @@ export function scanPaths(targets, options = {}) {
     }
     if (looksBinary(text)) continue;
     filesScanned++;
-    const display = normalize(relative(process.cwd(), file)) || file;
-    findings.push(...scanText(display, text, options));
+    let fileFindings = scanText(display, text, options);
+    if (restrict) {
+      const allowed = restrict.get(display);
+      fileFindings = fileFindings.filter((f) => allowed.has(f.line));
+    }
+    findings.push(...fileFindings);
   }
 
   const bySeverity = { high: 0, medium: 0, low: 0 };

@@ -2,7 +2,7 @@
 
 **Catch AI slop before it ships.** A zero-dependency CLI that scans your codebase for the junk AI coding agents leave behind — stubs, placeholder comments, fake data, swallowed errors — and fails CI when it finds them.
 
-> **Status (v0.1.0):** the open-source CLI works today (see [Verified](#verified)). The hosted **Slopgate Cloud** tier is **not built yet** — the `cloud` command says so and exits non-zero rather than pretend it works.
+> **Status (v0.2.0):** the open-source CLI works today (see [Verified](#verified)). The hosted **Slopgate Cloud** tier is **not built yet** — the `cloud` command says so and exits non-zero rather than pretend it works.
 
 ## Why
 
@@ -27,7 +27,7 @@ Test files (`*.test.*`, `*.spec.*`, `test/`) are automatically exempt from the f
 Not yet published to npm (the `slopgate` name is reserved). Run it from source today:
 
 ```sh
-git clone https://github.com/slopgate/slopgate
+git clone https://github.com/ceocxx/slopgate
 cd slopgate
 node bin/slopgate.mjs scan path/to/your/code
 ```
@@ -41,10 +41,21 @@ npx slopgate scan .
 ## Usage
 
 ```sh
-slopgate scan .                  # scan the current directory
-slopgate scan src/ api/          # scan specific paths
-slopgate scan . --json           # machine-readable output for CI
-slopgate scan . --fail-on high   # only fail on high-severity slop
+slopgate scan .                      # scan the current directory
+slopgate scan src/ api/              # scan specific paths
+slopgate scan . --json               # machine-readable output for CI
+slopgate scan . --fail-on high       # only fail on high-severity slop
+slopgate scan . --diff origin/main   # only flag slop on lines changed vs origin/main
+```
+
+### Adopting on an existing repo
+
+A legacy codebase will light up on the first scan. Use `--diff` so the gate only
+judges the lines a change actually touched — pre-existing slop is ignored, new
+slop is blocked:
+
+```sh
+slopgate scan . --diff origin/main
 ```
 
 ### Exit codes
@@ -58,8 +69,8 @@ slopgate scan . --fail-on high   # only fail on high-severity slop
 That makes it a drop-in CI gate:
 
 ```yaml
-# .github/workflows/slop.yml
-- run: npx slopgate scan . --fail-on medium
+# .github/workflows/slop.yml — block PRs that add new slop
+- run: npx slopgate scan . --diff origin/${{ github.base_ref }} --fail-on medium
 ```
 
 ## Configuration

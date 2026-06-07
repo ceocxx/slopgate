@@ -1,6 +1,6 @@
 {
   "name": "slopgate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Catch AI slop before it ships — a zero-dependency CLI that flags stubs, placeholders, fake data, and swallowed errors in your codebase, and fails CI when it finds them.",
   "type": "module",
   "bin": {
@@ -38,10 +38,10 @@
   "author": "CUI Labs Pte. Ltd.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slopgate/slopgate.git"
+    "url": "git+https://github.com/ceocxx/slopgate.git"
   },
-  "homepage": "https://github.com/slopgate/slopgate",
+  "homepage": "https://github.com/ceocxx/slopgate",
   "bugs": {
-    "url": "https://github.com/slopgate/slopgate/issues"
+    "url": "https://github.com/ceocxx/slopgate/issues"
   }
 }

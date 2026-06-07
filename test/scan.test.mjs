@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { scanText, scanPaths, SEVERITY_ORDER } from '../src/scanner.mjs';
+import { parseDiff } from '../src/gitdiff.mjs';
 
 const slopFixture = fileURLToPath(new URL('../examples/slop-sample.js', import.meta.url));
 const cleanFixture = fileURLToPath(new URL('../examples/clean-sample.js', import.meta.url));
@@ -51,4 +52,33 @@ test('placeholder value is a low-severity finding', () => {
 test('severity ordering is sane', () => {
   assert.ok(SEVERITY_ORDER.high > SEVERITY_ORDER.medium);
   assert.ok(SEVERITY_ORDER.medium > SEVERITY_ORDER.low);
+});
+
+test('parseDiff extracts added line numbers per file', () => {
+  const diff = [
+    'diff --git a/src/x.js b/src/x.js',
+    '--- a/src/x.js',
+    '+++ b/src/x.js',
+    '@@ -1,0 +2,3 @@',
+    '+a',
+    '+b',
+    '+c',
+    'diff --git a/src/y.js b/src/y.js',
+    '--- a/src/y.js',
+    '+++ b/src/y.js',
+    '@@ -5 +5 @@',
+    '+changed',
+  ].join('\n');
+  const map = parseDiff(diff);
+  assert.deepEqual([...map.get('src/x.js')].sort((a, b) => a - b), [2, 3, 4]);
+  assert.deepEqual([...map.get('src/y.js')], [5]);
+});
+
+test('restrictToLines keeps only findings on changed lines (diff mode)', () => {
+  // line 22 of the slop fixture is the `throw new Error('not implemented')` stub
+  const restrict = new Map([['examples/slop-sample.js', new Set([22])]]);
+  const result = scanPaths([slopFixture], { failOn: 'medium', version: '0.1.0', restrictToLines: restrict });
+  assert.ok(result.findings.length >= 1, 'should keep the finding on the changed line');
+  assert.ok(result.findings.every((f) => f.line === 22), 'should drop findings on unchanged lines');
+  assert.ok(result.findings.some((f) => f.rule === 'not-implemented'));
 });
