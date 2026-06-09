@@ -29,7 +29,14 @@ Test files (`*.test.*`, `*.spec.*`, `test/`) are automatically exempt from the f
 
 ## Install
 
-**Run it today, straight from GitHub — no npm publish required:**
+**From npm:**
+
+```sh
+npm install -g @xiis/slopgate
+slopgate scan .
+```
+
+Or run straight from GitHub without installing:
 
 ```sh
 npx github:ceocxx/slopgate scan .
@@ -41,12 +48,6 @@ Or clone and run from source:
 git clone https://github.com/ceocxx/slopgate
 cd slopgate
 node bin/slopgate.mjs scan path/to/your/code
-```
-
-Once published to npm:
-
-```sh
-npx slopgate scan .
 ```
 
 ## Usage
