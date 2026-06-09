@@ -1,7 +1,13 @@
 # Launch copy for slopgate
 
-Ready-to-post. No fabricated metrics — everything points at the real public repo
-and the working `npx` command. Post from your own accounts.
+Ready-to-post. No fabricated metrics — everything points at the real, public,
+npm-published package. Post from your own accounts.
+
+Try-it command (verified working): `npx github:ceocxx/slopgate scan .` (zero install)
+or `npm i -g @xiis/slopgate` then `slopgate scan .`.
+Do NOT use `npx @xiis/slopgate` — npx has a quirk with scoped remote packages.
+
+Links: repo https://github.com/ceocxx/slopgate · npm https://www.npmjs.com/package/@xiis/slopgate · site https://ceocxx.github.io/slopgate/
 
 ---
 
